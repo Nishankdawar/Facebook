@@ -1,0 +1,237 @@
+
+<% if user %>
+<style type="text/css">
+
+	
+	.heading {
+
+		font-family:verdana;
+		color: #55ACEE; 
+		font-size: 100px;
+
+	}
+
+	.content {
+		font-family:verdana;
+		color:#008CBA; 
+		font-size: 50px;
+	}
+	.submitbutton {
+	
+	background-color: #4CAF50;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+	}
+
+	.submitbutton:hover {
+
+	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);	
+	background-color: #4CAF50;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+	}
+
+	.placeholder {
+
+	background-color: white;
+    border: solid black;
+    border-radius: 12px;
+    color: green;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+	}
+
+</style>
+<div class = "body">
+<h1 class="heading"><center>Hi&nbsp;<%=user.userName %></center></h1>
+
+<center>
+<form action = "/logout" method = "POST"> 
+	<input type="submit" name="submit" value = "Logout" class="submitbutton" />
+</form>
+<br>
+<h1 style="font-family:Helvetica; color:  #55ACEE;">Tweets</h1>
+<form action = "/add_tweet" method = "POST">
+	<input type="text" name = "content" placeholder="Enter your tweet here" maxlength="40" class = "placeholder"/>
+	<input type = "submit" value = "Tweet" class = "submitbutton"/>
+</form>
+</center>
+<br>
+<br>
+<br>
+<br>
+<ul>
+	<center>
+	<% if tweets %>
+		<% tweets.each do |tweet| %>
+			<% if tweet.require_edit == false %>
+				<p class="content"><%= tweet.content %>#<%= Time.now %>
+					<br>
+					<br>
+					<%= tweet.comment %>@<%= User.get(tweet.tweetId).userName %>
+				</p>
+					<form action="req_edit" method="GET">
+					<input type="hidden" class = "submitbutton" name="tweet_idindex" value="<%= tweet.id %> " >
+					<input type="submit" value="Edit" class="submitbutton">
+			</form>
+			<% else %>
+				<form action="edit_tweet" method="POST">
+					<input type="hidden" name="tweet_idindex" value="<%= tweet.id %>" class = "submitbutton " />
+					<input type="text" name="edit_tweet" value="<%= tweet.content %>" class = "placeholder"/>
+					<input type="submit" value="Edit Tweet" class="submitbutton"/>
+				</form>
+			<% end %>
+			<% if tweet.require_comment == false %>
+			
+			<form action="req_comment" method="GET">
+				<input type="hidden" class = "submitbutton" name="tweet_idindex" value="<%= tweet.id %> " >
+				<input type="submit" value="Comment " class="submitbutton">
+			</form>
+			<%else%>
+			<form action="comment_tweet" method="POST">
+				<input type="hidden" name="tweet_idindex" value="<%= tweet.id %>"/>
+				<input type="text" name = "tweet_comment" value = "<%= tweet.comment %>" class = "placeholder" />
+				<input type="submit" value="Comment Tweet" class="submitbutton" />
+			</form>
+			<% end %>
+			<form action ="delete_tweet" method="POST">
+				<input type="hidden" name="tweet_idindex" value = "<%= tweet.id %>" class = "submitbutton"/>
+				<input type="submit" value="Delete Tweet" class="submitbutton"/>
+			</form>
+			<p class="content"><%= tweet.likecounter %></p>
+			<form action="like_tweet" method="POST">
+				<input type="hidden" name="tweet_idindex" value = "<%= tweet.id %>" class = "submitbutton" />
+				<input type="submit" value = "Like tweet" class="submitbutton"/>
+			</form>
+		<%end%>
+	<% end %>
+	</center>
+	<center>
+	
+		<form action="/show_tweet" method="POST">
+			<input type="submit" value="<% if show==1 %>
+	  Hide tweets
+										 <%else %>
+	  Show tweets
+										<%end%>
+			" class="submitbutton"/>
+		</form>
+		<% if show == 1 %>
+			<% all_tweets.each  do |tweet| %>
+				<p class="content"><%= tweet.content %>@<%= User.get(tweet.tweetId).userName%></p>
+			<%end%>
+		<%end%>
+	
+	</center>
+	
+</ul>
+<center>
+<div>
+	<form action="/find_friends" method="POST">
+		<input type="submit" value="Find Friends" class="submitbutton">
+	</form>
+	<% if show_frnd == 1 %>
+		<div>
+			<ul>
+				<% all_user.each do |a_user| 
+					flag = 1
+					%>
+					<% if a_user.id == user.id 
+						flag = nil
+						end%>
+					<% all_friends.each do |friends| 
+						if friends.second_user == a_user.id
+							flag = nil
+					   	end %>
+					<%end%>   	
+					   	<% if flag %>
+					   		
+					   		<p class="content"><%= a_user.userName %></p>
+					   		<form action="/make_friend" method="POST">
+					   			<input type="hidden" name="friend_id" value="<%=a_user.id%>"/>
+					   			<input type="submit" value="Send Friend Request" class="submitbutton" />
+					   		</form>
+					   		
+					   	<%end%>
+				<%end%>	   	
+			</ul>
+		</div>
+	<%end%>
+</div>
+</center>
+<center>
+<div>
+	<form action="/showall_friend_requests" method="POST">
+		<input type="submit" value="show requests" class="submitbutton">
+	</form>
+	<% if show_all_req == 1 %>
+		<div>
+		 	<ul>
+			<% req_list.each do |req| %>
+				<li>
+					<p class="content"><%= User.get(req.friend1).userName %></p>
+					<form action="/confirm" method="POST">
+						<input type="hidden" name="req_id" value="<%=req.id%>">
+						<input type="submit" value="Confirm" class="submitbutton" >
+					</form> 
+				</li> 
+			<%end%>
+			</ul> 
+		</div>
+	<%end%>
+</div>
+</center>
+<center>
+<div>
+	<form action="/my_friends" method="POST">
+		<input type="submit" value = "My Friends" class="submitbutton" />
+	</form>
+	<% if show_my_friends == 1 %>
+		<div>
+				<% all_friends.each do |friends| %>
+					
+						<p class="content">@<%= User.get(friends.second_user).userName %></p>
+					
+				<% end %>
+		</div>
+	<% end %>
+</div>
+</center>
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

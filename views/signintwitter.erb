@@ -1,0 +1,85 @@
+<style>
+.signin {
+	
+	border-radius: 12px;
+	margin-left: auto;
+    margin-right: auto;
+	width: 320px;
+    border: none;
+    padding: 50px 30px 50px 80px; 
+    background-color: rgba(0,0,0,0.1);
+    
+
+}
+
+.outer {
+	/*background-image: url(http://wallpapercave.com/wp/8fWGVfB.jpg);*/
+	background-color: yellow;
+
+}
+	.submitbutton {
+	
+	background-color: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 12px;
+    color: rgba(0,0,0,0.7);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+	}
+
+	.submitbutton:hover {
+
+	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);	
+	background-color: #4CAF50;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+	}
+
+.placeholder {
+	background-color: white;
+    border: solid #ccfff5;
+    border-radius: 12px;
+    color: green;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+</style>
+<div class =" outer">
+<div class = "signin">
+<form action = "/signin" method="POST">
+	
+<input type="text" name="email" placeholder="Enter you email" class = "placeholder" />
+<br>
+<br>
+<input type="password" name = "password" placeholder="Enter your password" class = "placeholder" />
+<br>
+<br>
+<input type="submit" name = "submit" class = "submitbutton" />
+</form>
+
+<a href="/signup"> New User? </a>
+</div>
+</div>
+
+
